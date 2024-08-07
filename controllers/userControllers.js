@@ -92,26 +92,23 @@ module.exports.AllUser = async (req, res) => {
 };
 module.exports.CreateReport = async (req, res) => {
     try {
-        const { staffId, VIN, status, report_pdf, component_type } = req.body;
+        const { staffId, VIN, status, component_type } = req.body;
+        const report_pdf = req.file; 
         if (!staffId || !VIN || !status || !report_pdf || !component_type) {
             return responseManagement.sendResponse(res, httpStatus.BAD_REQUEST, "All fields are required");
         }
-
         const UserFound = await User.findOne({ staffId: staffId });
         if (!UserFound) {
             return responseManagement.sendResponse(res, httpStatus.NOT_FOUND, "No user found");
         }
-
         const NewInquiry = new InquiryReport({
             VIN,
             status,
-            report_pdf,
+            report_pdf: report_pdf.path, 
             component_type
         });
-
         const saved_inquiry = await NewInquiry.save();
         const NewInquiry_id = saved_inquiry._id;
-
         UserFound.vehicleReport.push(NewInquiry_id);
         await UserFound.save();
 
