@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const logger = require("morgan");
 const db=require("./Db/index")
-const routes=require("./routes/auth")
+const routes=require("./routes/index")
 dotenv.config();
 const app = express();
 db().then(() => {
