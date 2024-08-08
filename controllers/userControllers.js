@@ -30,10 +30,10 @@ module.exports.RegisterUser=async(req,res)=>{
         });
 
         await newAdmin.save();
-        responseManagement.sendResponse(res, httpStatus.CREATED, 'user registered successfully');
+       return responseManagement.sendResponse(res, httpStatus.OK, 'user registered successfully');
     } catch (error) {
         console.error(error);
-        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, 'Internal server error');
+       return responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, 'Internal server error');
     }
 }
 module.exports.UserLogin=async(req,res)=>{
