@@ -74,22 +74,48 @@ module.exports.UserLogin=async(req,res)=>{
 }
 module.exports.AllUser = async (req, res) => {
     try {
-        const allUsers = await User.find({});
-        if (allUsers.length > 0) {
-            const users = allUsers.map(user => {
-                const { name, email, Department, Division, status } = user.toObject();
-                return { name, email, Department, Division, status };
-            });
-
-            return responseManagement.sendResponse(res, httpStatus.OK, 'all user', { users });
-        } else {
-            return responseManagement.sendResponse(res, httpStatus.NOT_FOUND, "no such user here");
+        const { draw, columns, order, start, length, search } = req.body;
+        let allUsers = await User.find({});
+        if (search && search.value) {
+            const searchValue = new RegExp(search.value, 'i'); 
+            allUsers = allUsers.filter(user => 
+                searchValue.test(user.name) || 
+                searchValue.test(user.email) || 
+                searchValue.test(user.Department) || 
+                searchValue.test(user.Division) || 
+                searchValue.test(user.status)
+            );
         }
+        const users = allUsers.map(user => {
+            const { name, email, Department, Division, status } = user.toObject();
+            return { name, email, Department, Division, status };
+        });
+        if (order && order.length > 0) {
+            const orderColumn = columns[order[0].column].data;
+            const orderDir = order[0].dir === 'asc' ? 1 : -1;
+
+            users.sort((a, b) => {
+                if (a[orderColumn] < b[orderColumn]) return -1 * orderDir;
+                if (a[orderColumn] > b[orderColumn]) return 1 * orderDir;
+                return 0;
+            });
+        }
+
+        const paginatedUsers = users.slice(parseInt(start), parseInt(start) + parseInt(length));
+
+
+        return responseManagement.sendResponse(res, httpStatus.OK, 'all user', {
+            draw: parseInt(draw),
+            recordsTotal: allUsers.length,
+            recordsFiltered: users.length, 
+            data: paginatedUsers
+        });
     } catch (error) {
         console.log(error);
         return responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
     }
 };
+
 module.exports.CreateReport = async (req, res) => {
     try {
         const { staffId, VIN, status, component_type } = req.body;

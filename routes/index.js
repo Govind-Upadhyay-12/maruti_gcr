@@ -6,7 +6,7 @@ const {registerAdmin,adminLogin}=require("../controllers/adminController")
 const {upload}=require("../helpers/helper")
 router.post('/RegisterUser',auth,RegisterUser);
 router.post('/login',UserLogin)
-router.get('/AllUser',auth,AllUser)
+router.post('/AllUser',auth,AllUser)
 router.post('/createreport',upload.single("file"),auth,CreateReport)
 router.get('/AllReports',auth,GetAllReports);
 router.get('/filterByName',auth,getFilterByName)
