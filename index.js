@@ -17,7 +17,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(logger("dev"));
-
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/v1',routes);
 app.use((err, req, res, next) => {
   console.error(err.stack);
