@@ -9,7 +9,7 @@ router.post('/RegisterUser',auth,RegisterUser);
 router.post('/login',UserLogin)
 router.post('/AllUser',AllUser)
 router.post('/createreport',upload.single("file"),authuser,CreateReport)
-router.get('/AllReports',auth,GetAllReports);
+router.post('/AllReports',auth,GetAllReports);
 router.get('/filterByName',auth,getFilterByName)
 router.get('/filterbyCategory',auth,getFilterByComponent);
 router.post('/adminregister',registerAdmin)
