@@ -209,6 +209,26 @@ module.exports.getFilterByComponent = async (req, res) => {
         return responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, "error",{error});
     }
 };
+module.exports.ReportOfParticularUser=async(req,res)=>{
+    try {
+        const {staffId}=req.query;
+        const user=await User.findOne({staffId}).populate("vehicleReport");
+        if(!user){
+            return responseManagement.sendResponse(res, httpStatus.NOT_FOUND, "user not found",{});
+        }
+        const return_data={
+            name:user.name,
+            vehicleReport:user.vehicleReport
+  }
+    return responseManagement.sendResponse(res, httpStatus.OK, "Allreports",{return_data});
+    } catch (error) {
+        console.log(error);
+        return responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, "error",{error});
+        
+    }
+}
+
+
 
 
  
