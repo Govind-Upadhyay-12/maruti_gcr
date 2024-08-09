@@ -148,37 +148,42 @@ module.exports.GetAllReports = async (req, res) => {
     try {
         const { draw, start, length, order, columns } = req.body;
 
-        // Fetching all reports without any filtering
         let allAdmins = await User.find()
             .populate({
                 path: 'vehicleReport',
                 select: 'VIN status report_pdf component_type createdAt updatedAt'
             })
-            .select('-salt -ip -hash -Department -Divison -phone_Number');
+            .select('name email vehicleReport');
+        let allReports = allAdmins.flatMap(admin => {
+            return admin.vehicleReport.map(report => ({
+                name: admin.name,
+                email: admin.email,
+                ...report.toObject()
+            }));
+        });
 
-        // Sorting (if applicable)
         if (order && order.length > 0) {
             const orderColumn = columns[order[0].column].data;
             const orderDir = order[0].dir === 'asc' ? 1 : -1;
 
-            allAdmins.sort((a, b) => {
+            allReports.sort((a, b) => {
                 if (a[orderColumn] < b[orderColumn]) return -1 * orderDir;
                 if (a[orderColumn] > b[orderColumn]) return 1 * orderDir;
                 return 0;
             });
         }
 
-        // Paginating (if applicable)
-        const paginatedReports = allAdmins.slice(parseInt(start), parseInt(start) + parseInt(length));
 
-        // Response
-        if (!allAdmins || allAdmins.length === 0) {
+        const paginatedReports = allReports.slice(parseInt(start), parseInt(start) + parseInt(length));
+
+        if (!allReports || allReports.length === 0) {
             return responseManagement.sendResponse(res, httpStatus.NOT_FOUND, "Reports not found", null);
         }
+
         return responseManagement.sendResponse(res, httpStatus.OK, "All reports", {
             draw: parseInt(draw),
-            recordsTotal: allAdmins.length,
-            recordsFiltered: allAdmins.length, // No filtering applied
+            recordsTotal: allReports.length,
+            recordsFiltered: allReports.length, 
             data: paginatedReports
         });
     } catch (error) {
