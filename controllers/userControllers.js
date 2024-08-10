@@ -129,9 +129,6 @@ module.exports.CreateReport = async (req, res) => {
         }
         const NewInquiry = new InquiryReport({
             VIN,
-            status,
-            report_pdf: report_pdf.path, 
-            component_type
         });
         const saved_inquiry = await NewInquiry.save();
         const NewInquiry_id = saved_inquiry._id;
