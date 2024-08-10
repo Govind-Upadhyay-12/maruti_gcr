@@ -120,9 +120,9 @@ module.exports.CreateReport = async (req, res) => {
     try {
         const { staffId, VIN, status, component_type } = req.body;
         const report_pdf = req.file; 
-        if (!staffId || !VIN || !status || !report_pdf || !component_type) {
-            return responseManagement.sendResponse(res, httpStatus.BAD_REQUEST, "All fields are required");
-        }
+        // if (!staffId || !VIN || !status || !report_pdf || !component_type) {
+        //     return responseManagement.sendResponse(res, httpStatus.BAD_REQUEST, "All fields are required");
+        // }
         const UserFound = await User.findOne({ staffId: staffId });
         if (!UserFound) {
             return responseManagement.sendResponse(res, httpStatus.NOT_FOUND, "No user found");
