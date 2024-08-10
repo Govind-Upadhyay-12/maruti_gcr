@@ -16,7 +16,7 @@ router.post('/adminregister',registerAdmin)
 router.post('/loginadmin',adminLogin)
 router.get('/userreport',authuser,ReportOfParticularUser)
 router.post('/createModel',CreateModel)
-router.get('/vehicledetails',vehicleReport)
+router.get('/vehicledetails',authuser,vehicleReport)
 
 
 module.exports = router;
