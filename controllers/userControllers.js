@@ -256,7 +256,40 @@ module.exports.ReportOfParticularUser=async(req,res)=>{
         
     }
 }
+module.exports.CreateModel=async(req,res)=>{
+    try {
+        const { VIN, ModelNo, VehicleDetails } = req.body;
+        if (!VIN || !ModelNo || !VehicleDetails || !Array.isArray(VehicleDetails)) {
+          return res.status(400).json({ message: 'Please provide VIN, ModelNo, and an array of VehicleDetails' });
+        }
 
+        const newReport = new InquiryReport({
+          VIN,
+          ModelNo,
+          VehicleDetails
+        });
+        await newReport.save();
+    
+        res.status(201).json({ message: 'Vehicle inquiry report created successfully!', data: newReport });
+      } catch (error) {
+        res.status(500).json({ message: 'Error creating vehicle inquiry report', error });
+      }
+}
+module.exports.vehicleReport=async(req,res)=>{
+    try {
+        const { vin } = req.query;
+    
+        const report = await InquiryReport.findOne({ VIN: vin });
+    
+        if (!report) {
+            return responseManagement.sendResponse(res, httpStatus.NOT_FOUND, "vehicle information not found",{});
+        }
+    
+        return responseManagement.sendResponse(res, httpStatus.OK, "vehicle inquiry report retrieved successfully",{report});
+      } catch (error) {
+        return responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, "error",{error});
+      }
+}
 
 
 

@@ -15,7 +15,13 @@ const VehicleInquiryReport = new Schema({
    component_type:{
     type:String,
     enum:["break","ac hose","wheel","stering"]
-   }
+   },
+   ModelNo:{
+    type:String,
+   },
+   VehicleDetails: {
+      type: [String], 
+    },
 
 }, { timestamps: true });
 
