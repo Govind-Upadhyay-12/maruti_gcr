@@ -11,7 +11,6 @@ const VehicleInquiryReport = new Schema({
    },
    report_pdf:{
     type:String,
-    required:true
    },
    component_type:{
     type:String,

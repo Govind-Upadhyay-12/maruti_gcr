@@ -4,6 +4,7 @@ const cors = require("cors");
 const logger = require("morgan");
 const db=require("./Db/index")
 const routes=require("./routes/index")
+const path=require("path")
 dotenv.config();
 const app = express();
 db().then(() => {
