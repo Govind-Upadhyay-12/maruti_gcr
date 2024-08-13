@@ -290,6 +290,32 @@ module.exports.vehicleReport=async(req,res)=>{
         return responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, "error",{error});
       }
 }
+module.exports.UserGraph=async(req,res)=>{
+    try {
+        const reportData = await User.aggregate([
+            {
+                $lookup: {
+                    from: 'vehicle_inquiries',
+                    localField: 'vehicleReport',
+                    foreignField: '_id',
+                    as: 'vehicleReports'
+                }
+            },
+            {
+                $project: {
+                    name: 1,
+                    email: 1,
+                    reportCount: { $size: '$vehicleReports' }
+                }
+            }
+        ]);
+
+        return responseManagement.sendResponse(res, httpStatus.OK, "userdata",{reportData});
+    } catch (error) {
+        console.error('Error in fetching user reports:', error);
+        return responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, "error",{});
+    }
+}
 
 
 

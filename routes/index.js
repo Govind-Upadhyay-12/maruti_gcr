@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth=require("../middlewares/auth")
 const authuser=require("../middlewares/userauth")
-const {RegisterUser,UserLogin, AllUser, CreateReport, GetAllReports, getFilterByName,getFilterByComponent,ReportOfParticularUser,CreateModel,vehicleReport}=require("../controllers/userControllers")
+const {RegisterUser,UserLogin, AllUser, CreateReport, GetAllReports, getFilterByName,getFilterByComponent,ReportOfParticularUser,CreateModel,vehicleReport, UserGraph}=require("../controllers/userControllers")
 const {registerAdmin,adminLogin}=require("../controllers/adminController")
 const {upload}=require("../helpers/helper")
 router.post('/RegisterUser',auth,RegisterUser);
@@ -17,6 +17,7 @@ router.post('/loginadmin',adminLogin)
 router.get('/userreport',authuser,ReportOfParticularUser)
 router.post('/createModel',CreateModel)
 router.get('/vehicledetails',authuser,vehicleReport)
+router.get('/usergraph',UserGraph)
 
 
 module.exports = router;

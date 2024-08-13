@@ -19,6 +19,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(logger("dev"));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use("/admin", express.static(path.join(__dirname, "./admin/dist/admin")));
+app.get(/\/admin\/.*/, (req, res) => {
+  res.sendFile(path.join(__dirname, "./admin/dist/admin/index.html"));
+});
 app.use('/api/v1',routes);
 app.use((err, req, res, next) => {
   console.error(err.stack);
